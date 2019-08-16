@@ -1,0 +1,60 @@
+---
+title: "R Markdown Presentation & Plotly"
+author: "Tanmoy Rath"
+date: "16 August 2019"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## quakes dataset
+
+#### This is an R Markdown presentation showing <b>Locations of Earthquakes off Fiji</b>. The data set give the locations of 1000 seismic events of MB > 4.0. The events occurred in a cube near Fiji since 1964.
+
+<br/>
+
+#### <b>Format</b> : A data frame with 1000 observations on 5 variables.
+
+<br/>
+
+#### [,1]&nbsp;&nbsp;&nbsp;&nbsp;lat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numeric&nbsp;&nbsp;&nbsp;&nbsp;Latitude of event
+#### [,2]&nbsp;&nbsp;&nbsp;&nbsp;long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numeric&nbsp;&nbsp;&nbsp;&nbsp;Longitude
+#### [,3]&nbsp;&nbsp;&nbsp;&nbsp;depth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numeric&nbsp;&nbsp;&nbsp;&nbsp;Depth (km)
+#### [,4]&nbsp;&nbsp;&nbsp;&nbsp;mag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numeric&nbsp;&nbsp;&nbsp;&nbsp;Richter Magnitude
+#### [,5]&nbsp;&nbsp;&nbsp;&nbsp;stations&nbsp;&nbsp;&nbsp;&nbsp;numeric&nbsp;&nbsp;&nbsp;&nbsp;Number of stations reporting
+
+
+## Fiji earthquakes by depth (Km) from surface
+
+```{r cars, echo = FALSE}
+library(ggplot2)
+library(ggdark)
+quakes2 <- quakes[order(quakes$depth),]
+world <- map_data("world")
+fiji <- world[world$region == "Fiji",]
+fiji$long <- ifelse(fiji$long < 0, fiji$long+360, fiji$long)
+fiji$subregion <- ifelse(fiji$subregion == 17, "Rabi", fiji$subregion)
+fiji$subregion <- ifelse(fiji$subregion == 16, "Taveuni", fiji$subregion)
+fiji$subregion <- ifelse(fiji$subregion == 8, "Nayau", fiji$subregion)
+fiji$subregion <- ifelse(fiji$subregion == "Viti Levu", "Fiji, Viti Levu", fiji$subregion)
+colnames(fiji) <- c("long","lat","group","order","region","area")
+suppressMessages(
+        G <- ggplot(data = quakes2) +
+                geom_point(mapping = aes(x = long, y = lat, color=depth), size=0.5) +
+                #scale_colour_gradient2(low = "black", mid = "white", high = "red", midpoint = (max(quakes2$mag, na.rm = TRUE)+min(quakes2$mag, na.rm = TRUE))/2) +
+                #scale_colour_gradientn(colours=c("#000000", "#00FEFF", "#45FE4F", "#FCFF00", "#FF9400", "#FF3100")) +
+                scale_colour_gradientn(colours=c("#ffff00", "#ff0100", "#d201b0", "#0300ff", "#006bff", "#00ceff")) +
+                #scale_colour_gradientn(colours=c("#ffffff", "#ff0000", "#d201b0", "#0000ff", "#006bff", "#00ceff")) +
+                geom_polygon(data=fiji, aes(x=long, y=lat, group=area), fill="green", colour="black") +
+                dark_theme_gray()
+)
+plotly::ggplotly(G)
+```
+
+## Thanks
+
+<center>
+<img src="https://cdn.atwilltech.com/flowerdatabase/f/floral-spectacular-flower-vase-VA03507.425.jpg">
+</center>
