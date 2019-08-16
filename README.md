@@ -1,2 +1,1 @@
-# rmarkdownpresentationandplotly
-Repository for JHU Course Developing Data Products
+### gh-papes Link: <a href="https://tanmoy-rath.github.io/rmarkdownpresentationandplotly/index.html">https://tanmoy-rath.github.io/rmarkdownpresentationandplotly/index.html</a>
